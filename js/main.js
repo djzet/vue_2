@@ -8,18 +8,27 @@ Vue.component('notes',{
             colum_1: [],
             colum_2: [],
             colum_3: [],
-            errors: []
         }
     },
     mounted(){
         eventBus.$on('notes-submitted', notes =>{
-            this.errors = []
-            if (this.colum_1.length < 3){
-                this.colum_1.push(notes);
-            }else {
-                this.errors.push('Unable to create new entry');
-            }
+            this.colum_1.push(notes);
         })
+    },
+})
+
+Vue.component( 'newNotes',{
+    template:`
+    `,
+    data(){
+        return{
+            title: null,
+            task_1: null,
+            task_2: null,
+            task_3: null,
+            task_4: null,
+            task_5: null,
+        }
     },
 })
 
