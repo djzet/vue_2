@@ -2,6 +2,22 @@ let eventBus = new Vue();
 
 Vue.component('notes',{
     template:`
+        <div id="notes">
+            <div class="not-wrap">
+                <div class="note">
+                    <ul>
+                        <li class="notes" v-for="note in colum_1"><p>{{note.name}}</p>
+                            <ul>
+                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <input type="checkbox" class="checkbox" @click="newStatus_1">
+                                <p>{{task.name}}}</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     `,
     data(){
         return{
@@ -11,7 +27,7 @@ Vue.component('notes',{
         }
     },
     mounted(){
-        eventBus.$on('notes-submitted', notes =>{
+        eventBus.$on('notes-submitted', note =>{
             this.colum_1.push(notes);
         })
     },
@@ -32,7 +48,7 @@ Vue.component( 'newNotes',{
     },
     methods:{
         onSubmit() {
-            let notes = {
+            let note = {
                 name: this.name,
                 tasks: [
                     {name: this.task_1, readiness: false},
