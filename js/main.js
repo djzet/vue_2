@@ -2,14 +2,38 @@ let eventBus = new Vue();
 
 Vue.component('notes',{
     template:`
-        <div id="notes">
+        <div class="notes">
             <div class="not-wrap">
                 <div class="note">
                     <ul>
                         <li class="notes" v-for="note in colum_1"><p>{{note.name}}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
-                                <input type="checkbox" class="checkbox" @click="newStatus_1">
+                                <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)">
+                                <p>{{task.name}}}</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="note">
+                    <ul>
+                        <li class="notes" v-for="note in colum_2"><p>{{note.name}}</p>
+                            <ul>
+                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <input type="checkbox" class="checkbox" @click="newStatus_2(note, task)">
+                                <p>{{task.name}}}</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="note">
+                    <ul>
+                        <li class="notes" v-for="note in colum_3"><p>{{note.name}}</p>
+                            <ul>
+                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <input type="checkbox" class="checkbox" @click="task.readiness = true">
                                 <p>{{task.name}}}</p>
                                 </li>
                             </ul>
@@ -17,6 +41,7 @@ Vue.component('notes',{
                     </ul>
                 </div>
             </div>
+            <newNotes></newNotes>
         </div>
     `,
     data(){
@@ -35,6 +60,19 @@ Vue.component('notes',{
 
 Vue.component( 'newNotes',{
     template:`
+    <div>
+        <form class="create" @submit.prevent="onSubmit">
+            <p>
+                <input id="name" v-model="name" type="text" placeholder="Название">
+            </p>
+            <input id="task_1" v-model="task_1" type="text" placeholder="Задача">
+            <input id="task_2" v-model="task_2" type="text" placeholder="Задача">
+            <input id="task_3" v-model="task_3" type="text" placeholder="Задача">
+            <input id="task_4" v-model="task_4" type="text" placeholder="Задача">
+            <input id="task_5" v-model="task_5" type="text" placeholder="Задача">
+            <button type="submit">Создать</button>
+        </form>
+    </div>
     `,
     data(){
         return{
@@ -60,13 +98,13 @@ Vue.component( 'newNotes',{
                 data: null,
                 status: 0,
             }
-            eventBus.$emit('notes-submitted', notes)
-            this.name = null
-            this.task_1 = null
-            this.task_2 = null
-            this.task_3 = null
-            this.task_4 = null
-            this.task_5 = null
+            eventBus.$emit('notes-submitted', note);
+            this.name = null;
+            this.task_1 = null;
+            this.task_2 = null;
+            this.task_3 = null;
+            this.task_4 = null;
+            this.task_5 = null;
         },
     }
 })
