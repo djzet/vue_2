@@ -23,8 +23,9 @@ Vue.component('notes',{
     },
     template:`
         <div class="notes">
+            <h2 class="error" v-for="error in errors">{{error}}</h2>
             <newNotes></newNotes>
-            <div class="not-wrap">
+            <div class="note-wrap">
                 <div class="note">
                     <ul>
                         <li class="notes" v-for="note in colum_1"><p>{{note.name}}</p>
@@ -71,11 +72,17 @@ Vue.component('notes',{
             colum_1: [],
             colum_2: [],
             colum_3: [],
+            errors: [],
         }
     },
     mounted(){
-        eventBus.$on('notes-submitted', note =>{
-            this.colum_1.push(note);
+        eventBus.$on('notes-submitted', note => {
+            this.errors = []
+            if (this.colum_1.length < 3){
+                this.colum_1.push(note)
+            } else {
+                this.errors.push('Maximum number of tasks!')
+            }
         })
     },
     methods: {
@@ -148,7 +155,7 @@ Vue.component( 'newNotes',{
             <input id="name" v-model="name" type="text" placeholder="Название" required>
             <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required>
             <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required>
-            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3">
+            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3" required>
             <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4">
             <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5">
             <button type="submit">Создать</button>

@@ -1,7 +1,7 @@
 body{
     margin: 0 auto;
 }
-h1{
+h1, h2{
     text-align: center;
 }
 /*Форма*/
@@ -39,3 +39,12 @@ button {
     cursor: pointer;
 }
 /*Таблички*/
+.notes{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.note-wrap{
+    display: flex;
+    justify-content: space-between;
+}
