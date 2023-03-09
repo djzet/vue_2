@@ -2,21 +2,23 @@ let eventBus = new Vue();
 
 Vue.component('notes',{
     props:{
-        name:{
-            type: Text,
-            required: true
-        },
-        tasks:{
-            type: Array,
-            required: true,
-            readiness: {
-                type: Boolean,
+        note:{
+            name:{
+                type: Text,
+                required: true
+            },
+            tasks:{
+                type: Array,
+                required: true,
+                readiness: {
+                    type: Boolean,
+                    required: true
+                }
+            },
+            status: {
+                type: Number,
                 required: true
             }
-        },
-        status: {
-            type: Number,
-            required: true
         }
     },
     template:`
@@ -75,25 +77,65 @@ Vue.component('notes',{
         })
     },
     methods: {
-        newStatus_1(note, task){
+        newStatus_1(note, task) {
             task.readiness = true;
             let count = 0;
             note.status = 0;
-            for (let i = 0; i <= 5; ++i){
-                if (note.tasks[i].name !== null){
-                    ++count;
+            for (let i = 0; i < 5; ++i) {
+                if (note.tasks[i].name != null) {
+                    count++;
                 }
             }
-            for (let i = 0; i <= count; ++i){
-                if (note.tasks[i].readiness === true){
-                    ++note.status;
+
+            for (let i = 0; i < count; ++i) {
+                if (note.tasks[i].readiness === true) {
+                    note.status++;
                 }
             }
-            if (note.status/count*100 >= 50 && note.status/count*100 < 100 && this.colum_2.length < 5) {
+            if (note.status/count*100 >= 50 && this.colum_2.length < 5) {
                 this.colum_2.push(note)
                 this.colum_1.splice(this.colum_1.indexOf(note), 1)
+            } else if (this.colum_2.length === 5) {
+                if(this.colum_1.length > 0) {
+                    this.colum_1.forEach(item => {
+                        item.tasks.forEach(item => {
+                            item.required = true;
+                        })
+                    })
+                }
             }
-        }
+        },
+        newStatus_2(note, task) {
+            task.readiness = true;
+            let count = 0;
+            note.status = 0;
+            for (let i = 0; i < 5; ++i) {
+                if (note.tasks[i].name != null) {
+                    count++;
+                }
+            }
+
+            for (let i = 0; i < count; ++i) {
+                if (note.tasks[i].readiness === true) {
+                    note.status++;
+                }
+            }
+            if (note.status/count*100 === 100) {
+                this.colum_3.push(note)
+                this.colum_2.splice(this.colum_2.indexOf(note), 1)
+                note.date = new Date()
+            }
+            if(this.colum_2.length < 5) {
+                if(this.colum_1.length > 0) {
+                    this.colum_1.forEach(item => {
+                        item.tasks.forEach(item => {
+                            item.readiness = false;
+                        })
+                    })
+                }
+            }
+        },
+
     }
 })
 
