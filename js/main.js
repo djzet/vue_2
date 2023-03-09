@@ -1,6 +1,24 @@
 let eventBus = new Vue();
 
 Vue.component('notes',{
+    props:{
+        name:{
+            type: Text,
+            required: true
+        },
+        tasks:{
+            type: Array,
+            required: true,
+            readiness: {
+                type: Boolean,
+                required: true
+            }
+        },
+        status: {
+            type: Number,
+            required: true
+        }
+    },
     template:`
         <div class="notes">
             <div class="not-wrap">
@@ -53,9 +71,30 @@ Vue.component('notes',{
     },
     mounted(){
         eventBus.$on('notes-submitted', note =>{
-            this.colum_1.push(notes);
+            this.colum_1.push(note);
         })
     },
+    methods: {
+        newStatus_1(note, task){
+            task.readiness = true;
+            let count = 0;
+            note.status = 0;
+            for (let i = 0; i <= 5; ++i){
+                if (note.tasks[i].name !== null){
+                    ++count;
+                }
+            }
+            for (let i = 0; i <= count; ++i){
+                if (note.tasks[i].readiness === true){
+                    ++note.status;
+                }
+            }
+            if (note.status/count*100 >= 50 && note.status/count*100 < 100 && this.colum_2.length < 5) {
+                this.colum_2.push(note)
+                this.colum_1.splice(this.colum_1.indexOf(note), 1)
+            }
+        }
+    }
 })
 
 Vue.component( 'newNotes',{
@@ -95,7 +134,6 @@ Vue.component( 'newNotes',{
                     {name: this.task_4, readiness: false},
                     {name: this.task_5, readiness: false},
                 ],
-                data: null,
                 status: 0,
             }
             eventBus.$emit('notes-submitted', note);
