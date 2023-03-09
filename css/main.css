@@ -1,30 +1,3 @@
-body {
+body{
     margin: 0 auto;
-}
-.table_div {
-    display: flex;
-    justify-content: space-between;
-    width: auto;
-    height: auto;
-    background-color: bisque;
-}
-.notes_div {
-    display: flex;
-    width: 400px;
-    height: 500px;
-    background-color: aqua;
-}
-.notes_div > h2 {
-    margin: 10px auto;
-}
-.form_div {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: beige;
-    margin: 20px auto;
-    width: 400px;
-    height: 400px;
-}
-.form{
 }
