@@ -23,13 +23,14 @@ Vue.component('notes',{
     },
     template:`
         <div class="notes">
+            <newNotes></newNotes>
             <div class="not-wrap">
                 <div class="note">
                     <ul>
                         <li class="notes" v-for="note in colum_1"><p>{{note.name}}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
-                                <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)">
+                                <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)" :disabled="task.readiness">
                                 <p>{{task.name}}}</p>
                                 </li>
                             </ul>
@@ -41,7 +42,7 @@ Vue.component('notes',{
                         <li class="notes" v-for="note in colum_2"><p>{{note.name}}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
-                                <input type="checkbox" class="checkbox" @click="newStatus_2(note, task)">
+                                <input type="checkbox" class="checkbox" @click="newStatus_2(note, task)" :disabled="task.readiness">
                                 <p>{{task.name}}}</p>
                                 </li>
                             </ul>
@@ -50,10 +51,12 @@ Vue.component('notes',{
                 </div>
                 <div class="note">
                     <ul>
-                        <li class="notes" v-for="note in colum_3"><p>{{note.name}}</p>
+                        <li class="notes" v-for="note in colum_3">
+                            <p>{{note.name}}</p>
+                            <p>{{ note.date }}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
-                                <input type="checkbox" class="checkbox" @click="task.readiness = true">
+                                <input type="checkbox" class="checkbox" @click="task.readiness = true" :disabled="task.readiness">
                                 <p>{{task.name}}}</p>
                                 </li>
                             </ul>
@@ -61,7 +64,6 @@ Vue.component('notes',{
                     </ul>
                 </div>
             </div>
-            <newNotes></newNotes>
         </div>
     `,
     data(){
@@ -141,16 +143,14 @@ Vue.component('notes',{
 
 Vue.component( 'newNotes',{
     template:`
-    <div>
+    <div class="create_form">
         <form class="create" @submit.prevent="onSubmit">
-            <p>
-                <input id="name" v-model="name" type="text" placeholder="Название">
-            </p>
-            <input id="task_1" v-model="task_1" type="text" placeholder="Задача">
-            <input id="task_2" v-model="task_2" type="text" placeholder="Задача">
-            <input id="task_3" v-model="task_3" type="text" placeholder="Задача">
-            <input id="task_4" v-model="task_4" type="text" placeholder="Задача">
-            <input id="task_5" v-model="task_5" type="text" placeholder="Задача">
+            <input id="name" v-model="name" type="text" placeholder="Название" required>
+            <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required>
+            <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required>
+            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3">
+            <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4">
+            <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5">
             <button type="submit">Создать</button>
         </form>
     </div>
@@ -176,6 +176,7 @@ Vue.component( 'newNotes',{
                     {name: this.task_4, readiness: false},
                     {name: this.task_5, readiness: false},
                 ],
+                data: null,
                 status: 0,
             }
             eventBus.$emit('notes-submitted', note);
