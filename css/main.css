@@ -15,14 +15,14 @@ h1, h2{
     flex-direction: column;
     align-items: center;
     padding: 10px;
-    border: 1px solid black;
+    border: 0 solid black;
     border-radius: 10px;
     width: 300px;
     height: auto;
-    background-color: azure;
+    background-color: antiquewhite;
 }
 input {
-    border: 1px solid black;
+    border: 0 solid black;
     background-color: aliceblue;
     margin: 5px;
     padding: 5px;
@@ -30,7 +30,7 @@ input {
     width: 200px;
 }
 button {
-    border: 1px solid black;
+    border: 0 solid black;
     background-color: aliceblue;
     margin-top: 5px;
     padding: 5px;
@@ -43,8 +43,59 @@ button {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    margin: 0 auto;
 }
 .note-wrap{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    margin: 30px auto;
+    width: 1200px;
+    min-height: 550px;
+    background-color: antiquewhite;
+    border-radius: 10px;
+}
+.note{
+    background-color: aliceblue;
+    width: 300px;
+    margin: 20px 0 20px 0;
+    text-align: center;
+    border-radius: 10px;
+}
+
+ul{
+    margin: 10px auto;
+    padding: 0;
+    width: 200px;
+    border-radius: 10px;
+    list-style-type: none;
+    background-color: antiquewhite;
+}
+.note-name{
+    margin: 0 auto 20px auto;
+    padding: 10px 0 10px 0;
+}
+.note-data{
+
+}
+.tasks{
+    display: flex;
+    list-style-type: disc;
+    align-items: center;
+    justify-content: center;
+    margin: -10px;
+}
+.tasks-2{
+    display: flex;
+    list-style-type: disc;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin: -10px;
+}
+.checkbox{
+    margin-left: -60px;
+    margin-right: -60px;
+}
+.notes-li{
+    background-color: aliceblue;
 }

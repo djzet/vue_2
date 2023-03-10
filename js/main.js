@@ -28,11 +28,11 @@ Vue.component('notes',{
             <div class="note-wrap">
                 <div class="note">
                     <ul>
-                        <li class="notes" v-for="note in colum_1"><p>{{note.name}}</p>
+                        <li class="notes-li" v-for="note in colum_1"><p class="note-name">{{note.name}}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <p>{{task.name}}</p>
                                 <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)" :disabled="task.readiness">
-                                <p>{{task.name}}}</p>
                                 </li>
                             </ul>
                         </li>
@@ -40,11 +40,11 @@ Vue.component('notes',{
                 </div>
                 <div class="note">
                     <ul>
-                        <li class="notes" v-for="note in colum_2"><p>{{note.name}}</p>
+                        <li class="notes-li" v-for="note in colum_2"><p class="note-name">{{note.name}}</p>
                             <ul>
-                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <li class="tasks-2" v-for="task in note.tasks" v-if="task.name !== null">
                                 <input type="checkbox" class="checkbox" @click="newStatus_2(note, task)" :disabled="task.readiness">
-                                <p>{{task.name}}}</p>
+                                <p>{{task.name}}</p>
                                 </li>
                             </ul>
                         </li>
@@ -52,14 +52,14 @@ Vue.component('notes',{
                 </div>
                 <div class="note">
                     <ul>
-                        <li class="notes" v-for="note in colum_3">
-                            <p>{{note.name}}</p>
-                            <p>{{ note.date }}</p>
+                        <li class="notes-li" v-for="note in colum_3">
+                            <p class="note-name">{{note.name}}</p>
                             <ul>
-                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <li class="tasks-2" v-for="task in note.tasks" v-if="task.name !== null">
                                 <input type="checkbox" class="checkbox" @click="task.readiness = true" :disabled="task.readiness">
-                                <p>{{task.name}}}</p>
+                                <p>{{task.name}}</p>
                                 </li>
+                                <p class="note-data">{{ note.date }}</p>
                             </ul>
                         </li>
                     </ul>
@@ -77,15 +77,49 @@ Vue.component('notes',{
     },
     mounted(){
         eventBus.$on('notes-submitted', note => {
+            if (localStorage.getItem('colum_1')){
+                try {
+                    this.colum_1 = JSON.parse(localStorage.getItem('colum_1'));
+                }catch (e){
+                    localStorage.removeItem('colum_1')
+                }
+            }
+            if (localStorage.getItem('colum_2')){
+                try {
+                    this.colum_2 = JSON.parse(localStorage.getItem('colum_2'));
+                }catch (e){
+                    localStorage.removeItem('colum_2')
+                }
+            }
+            if (localStorage.getItem('colum_3')){
+                try {
+                    this.colum_3 = JSON.parse(localStorage.getItem('colum_3'));
+                }catch (e){
+                    localStorage.removeItem('colum_3')
+                }
+            }
             this.errors = []
             if (this.colum_1.length < 3){
                 this.colum_1.push(note)
+                //this.saveNote_1();
             } else {
                 this.errors.push('Maximum number of tasks!')
             }
         })
     },
     methods: {
+        saveNote_1(){
+            const parsed_1 = JSON.stringify(this.colum_1);
+            localStorage.setItem('colum_1', parsed_1);
+        },
+        saveNote_2(){
+            const parsed_2 = JSON.stringify(this.colum_2);
+            localStorage.setItem('colum_2', parsed_2);
+        },
+        saveNote_3(){
+            const parsed_3 = JSON.stringify(this.colum_3);
+            localStorage.setItem('colum_3', parsed_3);
+        },
         newStatus_1(note, task) {
             task.readiness = true;
             let count = 0;
@@ -95,7 +129,6 @@ Vue.component('notes',{
                     count++;
                 }
             }
-
             for (let i = 0; i < count; ++i) {
                 if (note.tasks[i].readiness === true) {
                     note.status++;
@@ -108,11 +141,12 @@ Vue.component('notes',{
                 if(this.colum_1.length > 0) {
                     this.colum_1.forEach(item => {
                         item.tasks.forEach(item => {
-                            item.required = true;
+                            item.readiness = true;
                         })
                     })
                 }
             }
+            //this.saveNote_2();
         },
         newStatus_2(note, task) {
             task.readiness = true;
@@ -123,7 +157,6 @@ Vue.component('notes',{
                     count++;
                 }
             }
-
             for (let i = 0; i < count; ++i) {
                 if (note.tasks[i].readiness === true) {
                     note.status++;
@@ -143,8 +176,8 @@ Vue.component('notes',{
                     })
                 }
             }
+            //this.saveNote_3();
         },
-
     }
 })
 
