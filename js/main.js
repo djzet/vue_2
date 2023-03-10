@@ -18,7 +18,19 @@ Vue.component('notes',{
             status: {
                 type: Number,
                 required: true
-            }
+            },
+            local_1: {
+                type: Array,
+                required: true,
+            },
+            local_2: {
+                type: Array,
+                required: true,
+            },
+            local_3: {
+                type: Array,
+                required: true,
+            },
         }
     },
     template:`
@@ -76,49 +88,39 @@ Vue.component('notes',{
         }
     },
     mounted(){
+        this.colum_1 = JSON.parse(localStorage.getItem("colum_1")) || [];
+        this.colum_2 = JSON.parse(localStorage.getItem("colum_2")) || [];
+        this.colum_3 = JSON.parse(localStorage.getItem("colum_3")) || [];
         eventBus.$on('notes-submitted', note => {
-            if (localStorage.getItem('colum_1')){
-                try {
-                    this.colum_1 = JSON.parse(localStorage.getItem('colum_1'));
-                }catch (e){
-                    localStorage.removeItem('colum_1')
-                }
-            }
-            if (localStorage.getItem('colum_2')){
-                try {
-                    this.colum_2 = JSON.parse(localStorage.getItem('colum_2'));
-                }catch (e){
-                    localStorage.removeItem('colum_2')
-                }
-            }
-            if (localStorage.getItem('colum_3')){
-                try {
-                    this.colum_3 = JSON.parse(localStorage.getItem('colum_3'));
-                }catch (e){
-                    localStorage.removeItem('colum_3')
-                }
-            }
             this.errors = []
             if (this.colum_1.length < 3){
-                this.colum_1.push(note)
-                //this.saveNote_1();
+                this.colum_1.push(note);
+                this.saveNote_1();
             } else {
-                this.errors.push('Maximum number of tasks!')
+                this.errors.push('Maximum number of tasks!');
             }
         })
     },
+    watch: {
+        colum_1(newValue) {
+            localStorage.setItem("colum_1", JSON.stringify(newValue));
+        },
+        colum_2(newValue) {
+            localStorage.setItem("colum_2", JSON.stringify(newValue));
+        },
+        colum_3(newValue) {
+            localStorage.setItem("colum_3", JSON.stringify(newValue));
+        }
+    },
     methods: {
         saveNote_1(){
-            const parsed_1 = JSON.stringify(this.colum_1);
-            localStorage.setItem('colum_1', parsed_1);
+            localStorage.setItem('colum_1', JSON.stringify(this.colum_1));
         },
         saveNote_2(){
-            const parsed_2 = JSON.stringify(this.colum_2);
-            localStorage.setItem('colum_2', parsed_2);
+            localStorage.setItem('colum_2', JSON.stringify(this.colum_2));
         },
         saveNote_3(){
-            const parsed_3 = JSON.stringify(this.colum_3);
-            localStorage.setItem('colum_3', parsed_3);
+            localStorage.setItem('colum_3', JSON.stringify(this.colum_3));
         },
         newStatus_1(note, task) {
             task.readiness = true;
@@ -146,7 +148,7 @@ Vue.component('notes',{
                     })
                 }
             }
-            //this.saveNote_2();
+            this.saveNote_2();
         },
         newStatus_2(note, task) {
             task.readiness = true;
@@ -176,9 +178,9 @@ Vue.component('notes',{
                     })
                 }
             }
-            //this.saveNote_3();
+            this.saveNote_3();
         },
-    }
+    },
 })
 
 Vue.component( 'newNotes',{
@@ -233,6 +235,6 @@ Vue.component( 'newNotes',{
 let app = new Vue({
     el: '#app',
     data: {
-       name: 'Notes'
+        name: 'Notes',
     }
 })
