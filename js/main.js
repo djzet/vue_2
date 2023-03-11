@@ -19,7 +19,7 @@ Vue.component('notes',{
                 type: Number,
                 required: true
             },
-        }
+        },
     },
     template:`
         <div class="notes">
@@ -30,7 +30,7 @@ Vue.component('notes',{
                     <ul>
                         <li class="notes-li" v-for="note in colum_1"><p class="note-name">{{note.name}}</p>
                             <ul>
-                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
+                                <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null"">
                                 <p class="p-li" :class="{ textDecoration: task.readiness }">{{task.name}}</p>
                                 <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)" :disabled="task.readiness">
                                 </li>
@@ -73,6 +73,7 @@ Vue.component('notes',{
             colum_2: [],
             colum_3: [],
             errors: [],
+            active: 0
         }
     },
     mounted(){
@@ -111,32 +112,32 @@ Vue.component('notes',{
             localStorage.setItem('colum_3', JSON.stringify(this.colum_3));
         },
         newStatus_1(note, task) {
-            task.readiness = true;
-            let count = 0;
-            note.status = 0;
-            for (let i = 0; i < 5; ++i) {
-                if (note.tasks[i].name != null) {
-                    count++;
+                task.readiness = true;
+                let count = 0;
+                note.status = 0;
+                for (let i = 0; i < 5; ++i) {
+                    if (note.tasks[i].name != null) {
+                        count++;
+                    }
                 }
-            }
-            for (let i = 0; i < count; ++i) {
-                if (note.tasks[i].readiness === true) {
-                    note.status++;
+                for (let i = 0; i < count; ++i) {
+                    if (note.tasks[i].readiness === true) {
+                        note.status++;
+                    }
                 }
-            }
-            if (note.status/count*100 >= 50 && this.colum_2.length < 5) {
-                this.colum_2.push(note)
-                this.colum_1.splice(this.colum_1.indexOf(note), 1)
-            } else if (this.colum_2.length === 5) {
-                if(this.colum_1.length > 0) {
-                    this.colum_1.forEach(item => {
-                        item.tasks.forEach(item => {
-                            item.readiness = true;
+                if (note.status/count*100 >= 50 && this.colum_2.length < 5) {
+                    this.colum_2.push(note)
+                    this.colum_1.splice(this.colum_1.indexOf(note), 1)
+                } else if (this.colum_2.length === 5) {
+                    if(this.colum_1.length > 0) {
+                        this.colum_1.forEach(item => {
+                            item.tasks.forEach(item => {
+                                item.readiness = true;
+                            })
                         })
-                    })
+                    }
                 }
-            }
-            this.saveNote_2();
+                this.saveNote_2();
         },
         newStatus_2(note, task) {
             task.readiness = true;
@@ -173,18 +174,32 @@ Vue.component('notes',{
 
 Vue.component( 'newNotes',{
     template:`
-    <div class="create_form">
-        <form class="create" @submit.prevent="onSubmit">
-            <input id="name" v-model="name" type="text" placeholder="Название" required maxlength="20">
-            <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required maxlength="20">
-            <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required maxlength="20">
-            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3" required maxlength="20">
-            <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4" maxlength="20">
-            <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5" maxlength="20">
-            <button type="submit">Создать</button>
-        </form>
-    </div>
-    `,
+    <section class="section-modal">
+        <a href="#openModal" class="button">Создать заметку</a>
+        <div id="openModal" class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close">×</a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="create_form">
+                            <form class="create" @submit.prevent="onSubmit">
+                                <input id="name" v-model="name" type="text" placeholder="Название" required maxlength="20">
+                                <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required maxlength="20">
+                                <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required maxlength="20">
+                                <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3" required maxlength="20">
+                                <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4" maxlength="20">
+                                <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5" maxlength="20">
+                                <button type="submit">Создать</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        `,
     data(){
         return{
             name: null,
@@ -193,7 +208,8 @@ Vue.component( 'newNotes',{
             task_3: null,
             task_4: null,
             task_5: null,
-            errors:[]
+            errors:[],
+            show: false,
         }
     },
     methods:{
@@ -225,6 +241,9 @@ Vue.component( 'newNotes',{
                 if(!this.task_3) this.errors.push("task_3 required.")
             }
         },
+        closeModal: function () {
+            this.show = false
+        }
     }
 })
 
