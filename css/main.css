@@ -94,12 +94,13 @@ ul{
     margin: -10px;
 }
 .checkbox{
-    margin-left: -60px;
-    margin-right: -60px;
+    opacity: 0;
+    margin-left: -118px;
+    margin-right: -88px;
 }
 .notes-li{
     background-color: aliceblue;
 }
-.text-decoration{
+.textDecoration{
     text-decoration: line-through;
 }

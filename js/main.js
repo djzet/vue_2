@@ -43,7 +43,7 @@ Vue.component('notes',{
                         <li class="notes-li" v-for="note in colum_1"><p class="note-name">{{note.name}}</p>
                             <ul>
                                 <li class="tasks" v-for="task in note.tasks" v-if="task.name !== null">
-                                <p>{{task.name}}</p>
+                                <p class="p-li" :class="{ textDecoration: task.readiness }">{{task.name}}</p>
                                 <input type="checkbox" class="checkbox" @click="newStatus_1(note, task)" :disabled="task.readiness">
                                 </li>
                             </ul>
@@ -56,7 +56,7 @@ Vue.component('notes',{
                             <ul>
                                 <li class="tasks-2" v-for="task in note.tasks" v-if="task.name !== null">
                                 <input type="checkbox" class="checkbox" @click="newStatus_2(note, task)" :disabled="task.readiness">
-                                <p>{{task.name}}</p>
+                                <p class="p-li" :class="{ textDecoration: task.readiness }">{{task.name}}</p>
                                 </li>
                             </ul>
                         </li>
@@ -69,7 +69,7 @@ Vue.component('notes',{
                             <ul>
                                 <li class="tasks-2" v-for="task in note.tasks" v-if="task.name !== null">
                                 <input type="checkbox" class="checkbox" @click="task.readiness = true" :disabled="task.readiness">
-                                <p>{{task.name}}</p>
+                                <p class="p-li" :class="{ textDecoration: task.readiness }">{{task.name}}</p>
                                 </li>
                                 <p class="note-data">{{ note.date }}</p>
                             </ul>
@@ -187,12 +187,12 @@ Vue.component( 'newNotes',{
     template:`
     <div class="create_form">
         <form class="create" @submit.prevent="onSubmit">
-            <input id="name" v-model="name" type="text" placeholder="Название" required>
-            <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required>
-            <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required>
-            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3" required>
-            <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4">
-            <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5">
+            <input id="name" v-model="name" type="text" placeholder="Название" required maxlength="20">
+            <input id="task_1" v-model="task_1" type="text" placeholder="Задача 1 " required maxlength="20">
+            <input id="task_2" v-model="task_2" type="text" placeholder="Задача 2" required maxlength="20">
+            <input id="task_3" v-model="task_3" type="text" placeholder="Задача 3" required maxlength="20">
+            <input id="task_4" v-model="task_4" type="text" placeholder="Задача 4" maxlength="20">
+            <input id="task_5" v-model="task_5" type="text" placeholder="Задача 5" maxlength="20">
             <button type="submit">Создать</button>
         </form>
     </div>
@@ -205,29 +205,37 @@ Vue.component( 'newNotes',{
             task_3: null,
             task_4: null,
             task_5: null,
+            errors:[]
         }
     },
     methods:{
         onSubmit() {
-            let note = {
-                name: this.name,
-                tasks: [
-                    {name: this.task_1, readiness: false},
-                    {name: this.task_2, readiness: false},
-                    {name: this.task_3, readiness: false},
-                    {name: this.task_4, readiness: false},
-                    {name: this.task_5, readiness: false},
-                ],
-                data: null,
-                status: 0,
+            if (this.name && this.task_1 && this.task_2 && this.task_3){
+                let note = {
+                    name: this.name,
+                    tasks: [
+                        {name: this.task_1, readiness: false},
+                        {name: this.task_2, readiness: false},
+                        {name: this.task_3, readiness: false},
+                        {name: this.task_4, readiness: false},
+                        {name: this.task_5, readiness: false},
+                    ],
+                    data: null,
+                    status: 0,
+                }
+                eventBus.$emit('notes-submitted', note);
+                this.name = null;
+                this.task_1 = null;
+                this.task_2 = null;
+                this.task_3 = null;
+                this.task_4 = null;
+                this.task_5 = null;
+            }else {
+                if(!this.name) this.errors.push("Name required.")
+                if(!this.task_1) this.errors.push("task_1 required.")
+                if(!this.task_2) this.errors.push("task_2 required.")
+                if(!this.task_3) this.errors.push("task_3 required.")
             }
-            eventBus.$emit('notes-submitted', note);
-            this.name = null;
-            this.task_1 = null;
-            this.task_2 = null;
-            this.task_3 = null;
-            this.task_4 = null;
-            this.task_5 = null;
         },
     }
 })
