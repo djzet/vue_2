@@ -19,18 +19,6 @@ Vue.component('notes',{
                 type: Number,
                 required: true
             },
-            local_1: {
-                type: Array,
-                required: true,
-            },
-            local_2: {
-                type: Array,
-                required: true,
-            },
-            local_3: {
-                type: Array,
-                required: true,
-            },
         }
     },
     template:`
